@@ -38,14 +38,29 @@ export default function app(){
       const data = await response.json();
       
       if(data.error) throw { message: data.error.message};
-      setWeather({
+
+      const weatherData = {
         city: data.location.name,
         country: data.location.country,
         temp: data.current.temp_c,
         condition: data.current.condition.code,
         icon: data.current.condition.icon,
         conditionText: data.current.condition.text,
+      }
+
+      setWeather(weatherData)
+
+      await fetch("http://localhost:3000/api/history", {
+        method: "POST",
+        headers: {
+          "Content-Type" : "application/json",
+        },
+        body: JSON.stringify(weatherData)
+
       })
+
+
+
     }catch(error) {
       setError({
         error: true,
